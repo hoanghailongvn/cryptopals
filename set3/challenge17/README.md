@@ -1,7 +1,7 @@
 # **[set 3 - challenge 17](https://cryptopals.com/sets/3/challenges/17): The CBC padding oracle**
 
 ## CBC padding attack
-Đầu tiên là nói lại về CBC encrypt:
+Đầu tiên là nói lại về CBC decrypt:
 - `ciphertext block` sẽ được đưa vào `hàm decrypt` với `consistent_but_unknown_key` như các bài trước, tạo ra block mình gọi là `after_decrypt`
 - `after_decrypt` sẽ được xor với `previous ciphertext block`, hoặc nếu đang xét block đầu tiên thì sẽ được xor với `iv` để tạo ra `plaintext block`
 
