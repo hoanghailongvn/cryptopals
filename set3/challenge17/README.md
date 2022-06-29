@@ -1,6 +1,6 @@
 # **[set 3 - challenge 17](https://cryptopals.com/sets/3/challenges/17): The CBC padding oracle**
 
-## CBC padding attack
+## Remind
 Đầu tiên là nói lại về CBC decrypt:
 - `ciphertext block` sẽ được đưa vào `hàm decrypt` với `consistent_but_unknown_key` như các bài trước, tạo ra block mình gọi là `after_decrypt`
 - `after_decrypt` sẽ được xor với `previous ciphertext block`, hoặc nếu đang xét block đầu tiên thì sẽ được xor với `iv` để tạo ra `plaintext block`
@@ -19,6 +19,7 @@ Hàm kiểm tra padding hợp lệ của pkcs7:
     - pad = \x03 thì là \x03\x03\x03
     - ...
 
+## CBC padding attack
 Thử thách này, ta sẽ sử dụng một [attack model](https://en.wikipedia.org/wiki/Attack_model) gọi là [Chosen-ciphertext attack](https://en.wikipedia.org/wiki/Chosen-ciphertext_attack). Bằng cách tạo ra các ciphertext tùy ý để cho vô hàm decrypt, dựa vào các thông tin nhận được để đọc được plaintext hoặc lấy được key.
 
 CBC padding attack: lợi dụng hàm kiểm tra xem padding có hợp lệ hay không, kẻ tấn công có thể lấy được ciphertext.
@@ -27,23 +28,24 @@ CBC padding attack: lợi dụng hàm kiểm tra xem padding có hợp lệ hay 
 
 Với `previous ciphertext block`, `ciphertext block` và thông tin padding hợp lệ, kẻ tấn công có thể lấy được `plaintext block`.
 
-Giải thích: 
+Giải thích: Xét từng block của ciphertext
 
-Đầu tiên, đi tìm từng byte của `after_decrypt`:
+Đầu tiên, tìm `after_decrypt`:
 - Tìm byte cuối cùng của `after_decrypt`:
     - Đây là cbc decrypt:
 
         <img src="pictures/cbc_decrypt.png">
 
-    - Ta thay đổi `previous ciphertext block`, gọi là `fake previous ciphertext block`.
+    - Thay đổi `previous ciphertext block`, gọi là `fake previous ciphertext block`.
 
         <img src="pictures/modify_previous.png">
-
-    - Ta thay đổi byte cuối của `fake previous ciphertext block`, khi mà pass qua được hàm kiểm tra padding, `plaintext block` có thể có các trường hợp sau:
+    
+    - Gửi ciphertext = `fake previous ciphertext block` + `ciphertext block` đang xét vô hàm decrypt
+    - Thay đổi byte cuối của `fake previous ciphertext block`, khi mà pass qua được hàm kiểm tra padding, `plaintext block` có thể có các trường hợp sau:
 
         <img src="pictures/pass_validate.png">
 
-    - Ta thay đổi thêm bytes trước đó của `fake previous ciphertext block` thành giá trị bất kì khác trong trường hợp có nhiều kết quả pass padding validate 
+    - Thay đổi thêm bytes trước đó của `fake previous ciphertext block` thành giá trị bất kì khác trong trường hợp có nhiều kết quả pass padding validate 
     - => chỉ còn đúng một giá trị của byte cuối `fake previous ciphertext block` pass padding validate, gọi giá trị này là `a`:
 
         <img src="pictures/last_byte.png">
@@ -62,7 +64,7 @@ Giải thích:
 
         <img src="pictures/fake_last_byte_02_done.png">
 
-    - Ta lại thay đổi `fake previous ciphertext block`[-2] cho đến khi pass padding validate, khi đó `plaintext block`[-2] = 2:
+    - Lại thay đổi `fake previous ciphertext block`[-2] cho đến khi pass padding validate, khi đó `plaintext block`[-2] = 2:
 
         <img src="pictures/fake-2.png">
 
