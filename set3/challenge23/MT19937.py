@@ -8,13 +8,14 @@ class MT19937_32:
     l = 18
     f = 1812433253
 
-    MT = [0] * n
-    index = n + 1
     lower_mask = (1 << r) - 1
     upper_mask = (1 << w) - 1 - lower_mask
 
     def __init__(self, seed=5489):
         # seed: 5489 is used in reference C code
+        self.MT = [0] * self.n
+        self.index = self.n + 1
+
         self.seed_mt(seed)
 
     def seed_mt(self, seed: int):
@@ -47,8 +48,3 @@ class MT19937_32:
         self.index = self.index + 1
 
         return y & ((1 << self.w) - 1)
-
-if __name__ == "__main__":
-    rng = MT19937_32()
-    for i in range(10):
-        print(rng.extract_number())

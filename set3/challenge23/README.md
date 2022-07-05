@@ -26,56 +26,102 @@ Thay số:
     y = y ^ (y >> 18)  
     y = y & (0xffffffff)
 ```
-Quy ước:
-- `y mới`: y vế trái
-- `y ban đầu`: y vế phải
-- sử dụng indexing như python, cấp độ bit: `y mới`[:18] nghĩa là 18 bit đầu tiên của `y mới`
 
-Ta đi ngược từ dưới lên, mục tiêu là từ `y mới`, tìm `y ban đầu` cuối cùng, chính là state:
+Ta đi ngược từ dưới lên, mục tiêu là từ số cuối cùng tìm ngược lại được state:
 - y = y & (0xffffffff):
     - Do y không quá 32 bit nên phép toán này coi như bỏ
-- y = y ^ (y >> 18):
-    - Hình vẽ minh họa:
+
+- Trong 4 phép toán ở trên thì phân ra làm 2 loại chính:
+    - Một là xor với (chính nó dịch phải):
 
     <img src="pictures/y_xor_(y_rightshift_18).png">
 
-    - `y ban đầu`[:18] = `y mới`[:18]
-    - `y ban đầu`[18:] = `y ban đầu`[:14] ^ `y mới`[18:]
+    - Hai là xor với (chính nó dịch trái and với hằng số)
 
-- y = y ^ ((y << 15) & 0xefc60000)
-    - Hình vẽ minh họa:
-    
     <img src="pictures/y_xor_((y_leftshift_15)_and_0xefc60000).png">
 
-    - `y ban đầu`[15:] = `y mới`[15:]
-    - `y ban đầu`[:15] = `y mới`[:15] ^ (0xefc6 and `y ban đầu`[15:31])
-- Tương tự đối với 2 phép toán cuối cùng, do phép toán shift nên hàm xor bị hở, ta có thể dần dần tính ra từng bit của `y ban đầu`
-<!-- - y = y ^ ((y << 7) & 0x9d2c5680)
-    - Hình vẽ minh họa:
-    
-    <img src="pictures/y_xor_((y_leftshift_7)_and_0x9d2c5680).png">
+- Do 2 phép toán trên đều có một toán hạng đã dịch trái hoặc dịch phải, nên ta biết chắc chắn ở chỗ đó bit có giá trị là 0. => có thể lợi dụng điều này, lần lượt tìm từng bit của y ban đầu.
 
-    - `y ban đầu`[25:] = `y mới`[25:]
-    - `y ban đầu`[18:25] = `y mới`[18:25] ^ (`0x9d2c5680`[18:25] and `y ban đầu`[25:])
-    - `y ban đầu`[11:18] = `y mới`[11:18] ^ (`0x9d2c5680`[11:18] and `y ban đầu`[18:25])
-    - `y ban đầu`[4:11] = `y mới`[4:11] ^ (`0x9d2c5680`[4:11] and `y ban đầu`[11:18])
-    - `y ban đầu`[:4] = `y mới`[:4] ^ (`0x9d2c5680`[:4] and `y ban đầu`[7:11])
-    - :((
+    <img src="pictures/y_xor_(y_rightshift_18)_solve.png">
 
-- y = y ^ (y >> 11)
-    - Tương tư như mấy câu trên
-    - `y ban đầu`[:11] = `y mới`[:11]
-    - `y ban đầu`[11:22] = `y mới`[11:22] ^ `y ban đầu`[:11]
-    - `y ban đầu`[22:] = `y mới`[22:] ^ `y ban đầu`[11:21] -->
+- Với trường hợp xor với (chính nó dịch phải), ta có thể đi từ trái sang phải để tìm từng bit của y ban đầu:
+```
+def invert_rightshift_xor(y: int, shift: int):
+    original = 0
 
-=> tìm được state
+    for i in range(1, 32 + 1):
+        # Lấy i bit đầu tiên của y
+        temp_y = y >> (32 - i)
+        temp_original = original >> (shift - 1)
 
-## Code
-Tổng cộng có 2 phép toán rightshift rồi xor, và 2 phép toán leftshift, and xong xor: ta viết 2 hàm invert_rightshift_xor() và invert_leftshift_and_xor().
-- invert_rightshift_xor():
+        original = temp_y ^ temp_original
+
+    return original
+```
+- Với trường hợp xor với (chính nó dịch trái and với hằng số) thì khó hơn một chút, lần này ta đi từ phải sang trái:
+```
+def invert_leftshift_and_xor(y: int, shift: int, and_const: int) -> int:
+    original = 0
+
+    for i in range(1, 32 + 1):
+        # Lấy i bit cuối cùng của y và and_const
+        temp_y = y & ((1 << i) - 1)
+        temp_and_const = and_const & ((1 << i) - 1)
+
+        # Lấy i - shift bit cuối cùng của original đã tính được
+        if i - shift > 0:
+            temp_original = original & ((1 << (i - shift)) - 1)
+        else:
+            temp_original = 0
+
+        # invert
+        original = temp_y ^ (temp_and_const & (temp_original << shift))
+
+    return original
+```
+- Ghép lại làm hàm untemper, ngược lại với chiều xuôi của MT19937:
+```
+def untemper(y: int):
+    y = invert_rightshift_xor(y, 18)
+    y = invert_leftshift_and_xor(y, 15, 0xefc60000)
+    y = invert_leftshift_and_xor(y, 7, 0x9d2c5680)
+    y = invert_rightshift_xor(y, 11)
+
+    return y
 ```
 
+## Check
+- Thứ mà attacker có chính là 624 số ngẫu nhiên của rng gốc:
 ```
+# just for this challenge, don't use time() for seed
+seed = int(time())
+rng = MT19937_32(seed)
 
+# Lấy 624 số ngẫu nhiên đầu tiên của rng, lưu vào mảng recv, đấy là thứ mà attacker có
+recv = []
+for i in range(624):
+    recv.append(rng.extract_number())
+```
+- Sử dụng hàm untemper() ở trên, tạo ra clone rng:
+```
+# Khôi phục lại mảng MT thông qua đảo ngược 624 số ngẫu nhiên
+inverted_MT = []
+for i in range(624):
+    inverted_MT.append(untemper(recv[i]))
+
+# Tạo clone_rng với MT thay bằng inverted_MT ở trên, thay index = 624 để kích hoạt twist
+clone_rng = MT19937_32()
+clone_rng.MT = inverted_MT
+clone_rng.index = 624
+```
+- Kiểm tra xem tất cả 624 số ngẫu nhiên tiếp theo của 2 rng xem có bằng nhau hay không:
+```
+print(all([rng.extract_number() == clone_rng.extract_number() for _ in range(624)]))
+```
+- Kết quả:
+```
+True
+```
+=> Clone thành công. Source code [here](./script.py)
 ## References
 
