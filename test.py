@@ -1,4 +1,10 @@
-from math import ceil
+a = 3
 
+def test():
+    global a
+    a = 10
+    print(a)
+    
 
-print(ceil(4/2))
+test()
+print(a)
