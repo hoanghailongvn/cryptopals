@@ -34,10 +34,10 @@ True
 ```
 
 Trong đó:
-- [A]: $A = g^a \mod p$
-- [B]: $B = g^b \mod p$
-- [A]: $s = B^a \mod p = (g^b \mod p)^a \mod p = g^{ab} \mod p$
-- [B]: $s = A^b \mod p = (g^a \mod p)^b \mod p = g^{ab} \mod p$
+- [A]: $`A = g^a \mod p`$
+- [B]: $`B = g^b \mod p`$
+- [A]: $`s = B^a \mod p = g^{ab} \mod p`$
+- [B]: $`s = A^b \mod p = g^{ab} \mod p`$
 - => 2 `s` bằng nhau, từ A và B khó có thể tìm được ra a, b, và s
 
 ## Math
