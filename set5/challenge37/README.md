@@ -3,8 +3,8 @@
 
 ## Math
 Ta có
-- $A = g^{a} \mod N$
-- $S = g^{ab} \times g^{xub} = A^{b} \times g^{xub} \mod N$
+- $`A = g^{a} \mod N`$
+- $`S = g^{ab} \times g^{xub} = A^{b} \times g^{xub} \mod N`$
 
 => Nếu A = 0 hoặc A là bội của N thì $S = 0$.
 
