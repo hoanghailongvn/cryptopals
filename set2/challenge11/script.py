@@ -1,5 +1,6 @@
 from random import randint
 from Crypto.Cipher import AES
+from os import urandom
 
 def pkcs7(message: bytes, blocksize: int) -> bytes:
     diff = blocksize - len(message) % blocksize
@@ -10,17 +11,10 @@ def pkcs7(message: bytes, blocksize: int) -> bytes:
 
     return ret
 
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
-
 def append_5_10(plaintext: bytes):
     first = randint(5, 10)
     last = randint(5, 10)
-    ret = random_bytes(first) + plaintext + random_bytes(last)
+    ret = urandom(first) + plaintext + urandom(last)
 
     return ret
 
@@ -33,8 +27,8 @@ def AES_encrypt(plaintext: bytes):
     plaintext = pkcs7(plaintext, blocksize)
 
     r = randint(0, 1)
-    key = random_bytes(keysize)
-    iv = random_bytes(blocksize)
+    key = urandom(keysize)
+    iv = urandom(blocksize)
 
     if r == 0: #ECB
         print("used mode: ecb")
