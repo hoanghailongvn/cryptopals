@@ -3,7 +3,7 @@ from Crypto.Cipher import AES
 import struct
 
 # tạo ra bytes object ngẫu nhiên có độ dài length
-def random_bytes(length: int) -> bytes:
+def urandom(length: int) -> bytes:
     ret = []
     for _ in range(length):
         ret.append(randint(0, 255))

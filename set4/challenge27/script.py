@@ -1,8 +1,9 @@
-from mytool import random_bytes, stream_xor
+from mytool import stream_xor
+from os import urandom
 from Crypto.Cipher import AES
 
 ## server side
-consistent_but_unknown_key = random_bytes(16)
+consistent_but_unknown_key = urandom(16)
 encryptor = AES.new(consistent_but_unknown_key, AES.MODE_CBC, consistent_but_unknown_key)
 decryptor = AES.new(consistent_but_unknown_key, AES.MODE_CBC, consistent_but_unknown_key)
 

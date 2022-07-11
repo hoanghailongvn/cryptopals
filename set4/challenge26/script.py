@@ -1,9 +1,10 @@
 import CTR
-from CTR import random_bytes, stream_xor
+from CTR import stream_xor
+from os import urandom
 import struct
 
 ## server side
-consistent_but_unknown_key = random_bytes(16)
+consistent_but_unknown_key = urandom(16)
 nonce = struct.pack("Q", 0)
 
 def challenge26_encrypt(attacker_controlled: bytes):

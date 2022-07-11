@@ -2,6 +2,7 @@ from binascii import unhexlify
 from cmath import inf
 import hashlib
 from random import randint
+from os import urandom
 from time import sleep, time
 
 def bxor(b1: bytes, b2: bytes) -> bytes: # use xor for bytes
@@ -28,14 +29,7 @@ def hmac_sha1(message: bytes, key: bytes) -> bytes:
     return sha1(bxor(key, opad) + sha1(bxor(key, ipad) + message))
 
 # Server side
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
-
-consistent_but_unknown_key = random_bytes(randint(1, 20))
+consistent_but_unknown_key = urandom(randint(1, 20))
 
 def insecure_compare(file: str, signature: str):
     expected = hmac_sha1(bytes(file, 'utf-8'), consistent_but_unknown_key)
