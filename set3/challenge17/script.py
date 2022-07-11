@@ -1,6 +1,7 @@
 import base64
 from random import randint
 from Crypto.Cipher import AES
+from os import urandom
 
 ten_strings = \
 """
@@ -24,13 +25,6 @@ def stream_xor(input1: bytes, input2: bytes) -> bytes:
     ret = bytes([a ^ b for a, b in zip(input1, input2)])
     return ret
 
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
-
 def pkcs7_padding(message: bytes, blocksize: int = 16) -> bytes:
     diff = blocksize - len(message) % blocksize
 
@@ -48,8 +42,8 @@ def pkcs7_unpadding(message:bytes, blocksize: int = 16) -> bytes:
     return message[: -pad]
 
 blocksize = 16
-consistent_but_unknown_key = random_bytes(16)
-iv = random_bytes(blocksize)
+consistent_but_unknown_key = urandom(16)
+iv = urandom(blocksize)
 
 def challenge17_encrypt():
     plaintext = ten_strings[randint(0, 9)]

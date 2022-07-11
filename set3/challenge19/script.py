@@ -1,6 +1,6 @@
 import base64
 from cmath import inf
-from random import randint
+from os import urandom
 import string
 from Crypto.Cipher import AES
 import struct
@@ -49,14 +49,6 @@ VHJhbnNmb3JtZWQgdXR0ZXJseTo=
 QSB0ZXJyaWJsZSBiZWF1dHkgaXMgYm9ybi4=
 """
 
-# tạo ra bytes object ngẫu nhiên có độ dài length
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
-
 # xor 2 bytes object theo cái ngắn hơn
 def stream_xor(input1: bytes, input2: bytes) -> bytes:
     shorter = min(len(input1), len(input2))
@@ -65,7 +57,7 @@ def stream_xor(input1: bytes, input2: bytes) -> bytes:
     return ret
 
 blocksize = 16
-consistent_but_unknown_key = random_bytes(16)
+consistent_but_unknown_key = urandom(16)
 nonce = struct.pack("Q", 0)
 
 # mã hóa aes(nonce|counter) để tạo ra key trong ctr mode
@@ -99,8 +91,7 @@ def cracking_single_xor(b_ciphertext: bytes):
         b_string_printable = bytes(string.printable, 'ascii')
 
         if all(p in b_string_printable for p in b_temp_plaintext):
-            # s = freqAnalysis.englishFreqMatchScore(b_temp_plaintext.decode('ascii'))
-            s = freqAnalysis.selfmade_englishFreqMatchScore(b_temp_plaintext.decode('ascii'))
+            s = freqAnalysis.englishFreqMatchScore(b_temp_plaintext.decode('ascii'))
             if max_score < s:
                 final_key = key
                 max_score = s

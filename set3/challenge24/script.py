@@ -1,15 +1,8 @@
-from random import randint
+from os import urandom
+from random import randrange
 from time import time
 import struct
 from MT19937 import MT19937_32
-
-
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
 
 # xor 2 bytes object theo cái ngắn hơn
 def stream_xor(input1: bytes, input2: bytes) -> bytes:
@@ -20,7 +13,7 @@ def stream_xor(input1: bytes, input2: bytes) -> bytes:
 
 def generate_plaintext() -> bytes:
     plaintext = b'A'*14
-    plaintext = random_bytes(randint(0, 50)) + plaintext
+    plaintext = urandom(randrange(0, 50)) + plaintext
 
     return plaintext
 
@@ -55,7 +48,7 @@ def recover_seed(ciphertext: bytes):
 
 if __name__ == "__main__":
     # random 16 bit seed
-    consistent_but_unknown_seed = randint(0, 2**16 - 1)
+    consistent_but_unknown_seed = randrange(0, 2**16)
     print(f"used seed: {consistent_but_unknown_seed}")
 
     plaintext = generate_plaintext()
