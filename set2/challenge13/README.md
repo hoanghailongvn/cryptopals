@@ -2,7 +2,7 @@
 
 ## Đề bài
 
-Để hiểu đề bài hơn, ta hãy nghĩ đến luồng hoạt động của server đối với cookie:
+Các bước trong đề bài giống như là các thao tác của server với cookies:
 - 1. đọc email của user
 - 2. tạo một đoạn cookie như là: `email=foo@bar.com&uid=10&role=user`
 - 3. encrypt đoạn cookie này và gửi cho người dùng
@@ -91,16 +91,15 @@ Những gì ta đã biết:
 ## Ý tưởng
 Vẫn lỗi bảo mật cơ bản với ECB, tuy không biết key nhưng ta vẫn có thể có được ciphertext block tương ứng với plaintext block.
 
-email chúng ta gửi lên server sẽ được đưa vào cookie sau đó encrypt, đoạn này gọi là `attacker_controlled`
+Hàm encrypt sẽ nhận vào plaintext cookie: 'email=|attacker_controlled|&uid=10&role=user'. Trong đó:
+- attacker_controlled là vị trí người dùng có thể đưa nội dung vào. (và cả attakcer)
 
-Hàm encrypt sẽ nhận vào plaintext cookie: 'email=|attacker_controlled|&uid=10&role=user'
+Các bước:
+- 1. phân tích plaintext cookie thành từng block 16 ký tự
+- 2. thay đổi `attacker_controlled` hợp lý sao cho khi đổi chỗ các block trong cookie, có thể xuất hiện string 'role=admin'
+- 3. lấy ciphertext mà server gửi về, đảo vị trí các block sao cho xuất hiện 'role=admin' tương ứng với plaintext
 
-Tiếp theo:
-- phân tích plaintext cookie thành từng block 16 ký tự
-- thay đổi `attacker_controlled` hợp lý sao cho khi đổi chỗ các block trong cookie, có thể xuất hiện string 'role=admin'
-- lấy encrypted cookie mà server gửi về, đảo vị trí các block như khi đảo plaintext
-
-## solution
+## Solution
 Nếu ta nhập vào email = 'aaaaaaaaaa' + 'admin' + '\x0b'*0x0b + 'aaa', plaintext có thể được phân tích như sau
 ```
 block1 = 'email=aaaaaaaaaa'
@@ -109,10 +108,10 @@ block3 = 'aaa&uid=10&role=
 block4 = 'user' + '\x0c'*0x0c
 ```
 Trong đó:
-- '\x0b'*0x0b là padding pkcs7 thủ công
-- '\x0c'*0x0c là padding được pkcs7 server thêm vào
+- '\x0b'*0x0b ở block 2: là padding pkcs7 attacker tạo thủ công. Để khi chuyển block 2 xuống dưới cùng thì padding vẫn hợp lệ
+- '\x0c'*0x0c ở block 4: là padding được pkcs7 server thêm vào
 
-Mục đích ta muốn có các block như này là để khi đổi chỗ block 2 với block 4:
+Mục đích ta muốn có các block như này là để khi đổi chỗ block 2 với block 4, plaintext tương ứng sẽ là:
 ```
 block1 = 'email=aaaaaaaaaa'
 block4 = 'user' + '\x0c'*0x0c
@@ -148,6 +147,5 @@ Kết quả:
 Source code: [here](./script.py)
 
 ## References
-- writeup: https://bernardoamc.com/ecb-cut-paste-attack/
 - lambda: https://julien.danjou.info/python-functional-programming-lambda/
 - map(): https://www.w3schools.com/python/ref_func_map.asp
