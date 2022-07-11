@@ -6,7 +6,7 @@ CTR mode giống như OTP ở chỗ ciphertext được tạo thành bằng các
 <img src="pictures/ctr_e.png">
 
 Vấn đề ở chỗ, nếu mỗi lần ta encrypt một plaintext khác nhau:
-- nonce không thay đổi: fixed nonce
+- nonce không thay đổi
 - counter đếm lại từ đầu
 
 => keystream được tạo ra giống hệt nhau, xảy ra lỗi 'two time pad'
@@ -15,7 +15,7 @@ Vấn đề ở chỗ, nếu mỗi lần ta encrypt một plaintext khác nhau:
 
 ## Ý tưởng
 Sử dụng kỹ thuật single-byte xor attack như challenge 3 là oke:
-- Ghép tất cả các ký tự cùng vị trí của mỗi ciphertext, ta sẽ được một string mới, trong đó mỗi ký tự  string này đều được mã hóa bằng single-byte key
+- Ghép tất cả các ký tự cùng vị trí của mỗi ciphertext, ta sẽ được một string mới, trong đó mỗi ký tự string này đều được mã hóa bằng single-byte key
 
 <img src="pictures/sing_byte.png">
 
@@ -69,7 +69,5 @@ b'\\tound thb!nire at t'
 ```
 Đã khá giống với câu tiếng anh, tuy nhiên một số cột bị sai.
 
-Hàm đánh giá englishFreqMatchScore dùng trong các challenge3, challenge6 chỉ đơn giản là cho điểm dựa trên việc đếm các ký tự hay xuất hiện nhất, và ít xuất hiện nhất nên một số trường hợp sẽ tính toán sai.
-
-Nếu có hàm đánh giá câu english tốt hơn thì kết quả sẽ đẹp hơn.
+Hàm đánh giá englishFreqMatchScore dùng trong các challenge3, challenge6 khá đơn giản, nên tính điểm không được tốt. Nếu có hàm đánh giá câu english tốt hơn thì kết quả sẽ đẹp hơn. Nhưng đây không phải điểm quan trọng của bài này nên ta chỉ đến đây thôi.
 ## References
