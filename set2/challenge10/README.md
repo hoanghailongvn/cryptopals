@@ -8,7 +8,7 @@ CBC:
     - Plain text được chia làm các blocks bằng nhau
     - Cùng được mã hóa với key k
 - Khác ECB ở chỗ:
-    - Mỗi block plaintext trước khi được mã hóa với key sẽ xor với cipher text của block trước đó
+    - Mỗi block plaintext trước khi được mã hóa với key sẽ xor với ciphertext của block trước đó
     - Block đầu tiên thì sẽ xor với "fake 0th ciphertext block", gọi là `initialization vector` viết tắt là IV
 
 <img src="pictures/CBC_e.png">
@@ -24,8 +24,8 @@ CBC:
 ## Challenge
 Như để bài, ta nên sử dụng AES decrypt với ECB mode, viết thêm code để thành CBC mode:
 - Với từng block cipher text từ trái sang phải:
-    - decrypt như ecb mode
-    - xor với block cipher text trước nó (block đầu tiên thì xor với iv)
+    - 1. decrypt như ecb mode
+    - 2. xor với block cipher text trước nó (block đầu tiên thì xor với iv)
 
 Python code:
 ```
