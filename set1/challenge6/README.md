@@ -21,7 +21,7 @@ Theo như đề bài gợi ý, ta sử dụng hamming distance để tìm keysiz
 
 Ta sẽ thử với KEYSIZE lần lượt từ 2 đến khoảng 40.
 
-Với mỗi `KEYSIZE`, tính hamming distance giữa block thứ nhất trong có kích thước `KEYSIZE` bytes và block thứ hai cũng có `KEYSIZE` bytes của cipher text. Chia hamming distance tính được cho `KEYSIZE` để chuẩn hóa.
+Với mỗi `KEYSIZE`, tính hamming distance giữa block thứ nhất và block thứ hai có cùng `KEYSIZE` bytes của cipher text. Chia hamming distance tính được cho `KEYSIZE` để chuẩn hóa.
 
 Với hamming distance đã chuẩn hóa nhỏ nhất => keysize.
 
@@ -29,9 +29,7 @@ Với hamming distance đã chuẩn hóa nhỏ nhất => keysize.
 
 Hamming distance giữa các ký tự trong bảng chữ cái có xác suất cao sẽ nhỏ hơn hamming distance giữa 2 số bất kỳ trong khoảng [0-255]
 
-Hamming distance giữa các ký tự trong bảng chữ cái đã cùng xor với một character khác cũng nhỏ
-
-Với keysize đúng với keysize thật, hamming distance giữa các block sẽ nhỏ, và ngược lại
+Với keysize đúng, hamming distance giữa các block sẽ nhỏ, và ngược lại.
 
 ## Final
 Các bước cần làm:
@@ -58,7 +56,7 @@ Các bước cần làm:
 
         return score
     ```
-    - Hàm guess_KEYSIZE trả về key có score nhỏ nhất
+    - Hàm guess_KEYSIZE trả về keysize có score nhỏ nhất
     ```
     def guess_KEYSIZE(ciphertext: bytes):
         min = inf
