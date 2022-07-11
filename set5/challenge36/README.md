@@ -3,8 +3,6 @@
 ## Secure Remote Password
 [SRP (Secure Remote Password protocol)](https://en.wikipedia.org/wiki/Secure_Remote_Password_protocol): là giao thức giúp server xác thực người dùng thông qua mật khẩu.
 
-Điểm đặc biệt là phía server không lưu giá trị của password, dù là hash. 
-
 ## Math
 Một số công thức toán có trong giao thức.
 - $x = hash(salt|P)$
@@ -16,7 +14,7 @@ Một số công thức toán có trong giao thức.
 
 Trong đó, những nội dung public là: salt, A, B.
 
-Trong public B có ảnh hưởng của password
+public key B có phụ thuộc vào password
 
 ## Simulation
 [python code](./challenge36.py)
