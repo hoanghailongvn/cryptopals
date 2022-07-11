@@ -7,7 +7,6 @@
 # SHA1.py
 # ----------------------------------------------------------------------
 
-from string import hexdigits
 import struct
 import sys
 
@@ -33,7 +32,8 @@ class SHA1:
     @staticmethod
     def __padding(stream):
         l = len(stream)  # Bytes
-        hl = [int((hex(l*8)[2:]).rjust(16, '0')[i:i+2], 16) for i in range(0, 16, 2)]
+        hl = [int((hex(l*8)[2:]).rjust(16, '0')[i:i+2], 16)
+              for i in range(0, 16, 2)]
 
         l0 = (56 - l) % 64
         if not l0:
@@ -140,3 +140,21 @@ class SHA1:
             s += (hex(h)[2:]).rjust(8, '0')
         return s
 
+    def length_extension_attack(self, hash_value: bytes, message_length: int, new_text: bytes):
+        # break hash_value into h0, h1, ..., h4
+        for i in range(len(self.__H)):
+            self.__H[i] = int.from_bytes(hash_value[i*4 : (i+1)*4], byteorder='big')
+
+        # sử dụng hàm __padding có sẵn để lấy độ dài của message cũ
+        previous_length = len(SHA1.__padding('a'*message_length))
+
+        # sử dụng hàm __padding để padding new_text, thay 8 bytes ở cuối thành độ dài mới
+        stream = SHA1.__padding(new_text)
+        stream = stream[0: -8] + struct.pack(">Q", (previous_length + len(new_text))*8)
+        stream = SHA1.__prepare(stream)
+
+        # tiếp tục xử lý từng block mới
+        for block in stream:
+            self.__process_block(block)
+
+        return self.hexdigest()
