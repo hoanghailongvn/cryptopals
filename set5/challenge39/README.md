@@ -3,14 +3,16 @@
 ## RSA
 [RSA (Rivest–Shamir–Adleman)](https://en.wikipedia.org/wiki/RSA_(cryptosystem)): là một public-key cryptosystem.
 
-Trong đó: encryption key được public và khác biệt với decryption key (private). Hai key được tạo ra dựa trên 2 số nguyên tố.
+Trong đó: encryption key (public) khác biệt với decryption key (private). Hai key được tạo ra dựa trên 2 số nguyên tố.
 
 Sức mạnh của RSA dựa vào độ khó của `phân tích thừa số nguyên tố` hay là `factoring`.
 
 Một video rất dễ hiểu về các công thức toán trong rsa của Khanacademy: [link](https://www.youtube.com/watch?v=wXB-V_Keiu8)
 
 ## Implement
-Trong python 3.8+, hàm invmod đã có trong hàm pow:
+Trong python 3.8+:
+- hàm invmod đã có trong hàm pow
+- hàm getPrime đã có trong Crypto.Util.number
 ```
 from Crypto.Util.number import getPrime
 
