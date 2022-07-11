@@ -137,16 +137,15 @@ def simulate_mitm():
 
     # p g p
     fake_p_g_A = p_g_A[:2] + (p_g_A[0], )
-
     B_ = bob.recv_p_g_A(fake_p_g_A)
+
     # p
     fake_B = p_g_A[0]
     alice.recv_B(fake_B)
 
-    # => s hai bên đều là 0
     message = alice.send()
 
-    # mitm
+    # mitm attacker khi đã biết s cả hai bên đều là 0:
     ct, iv = message
     pt = aes_cbc_decrypt(sha1(bytes(256))[:16], iv, ct)
     print(f"mitm: {pt}")
