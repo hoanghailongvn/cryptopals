@@ -90,7 +90,6 @@ def attack():
         
         print(found.hex())
 ```
-Trong đó, lý do bruteforce hết 256 ký tự cho từng byte trong signature mà không phải dừng lại ngay khi thời gian thực thi dài hơn những lần trước là do có trường hợp ký tự rác ngẫu nhiên ngay sau bruteforce_signature của mình đã trùng sẵn với đáp án, nếu lấy thời gian này làm mốc thì khi bruteforce byte sau sẽ dễ bị sai.
 
 Kết quả:
 ```
@@ -112,7 +111,11 @@ KeyboardInterrupt
 ```
 Ta có thể thấy hàm attack() đã hoạt động thành công, nên ta dừng chương trình tại đây vì thời gian chạy lâu:
 
-Tổng thời gian chạy là: 20 * 256 * 20 * 50 = 5120000 (ms) = 1.42222222 (hours), 
+Tổng thời gian chạy là: 20 * 256 * 20 * 50 = 5120000 (ms) = 1.42222222 (hours):
+- 20: tổng số vị trí cần bruteforce
+- 256: 1 bytes = 256 
+- 20: mỗi lần bruteforce, so sánh nhiều nhất cả 20 bytes
+- 50: thời gian mỗi lần so sánh
 
 ## References
 Timing attack: https://en.wikipedia.org/wiki/Timing_attack
