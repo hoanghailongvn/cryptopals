@@ -8,7 +8,7 @@ Break giống như với SHA-1, điểm khác biệt:
 https://gist.github.com/kangtastic/c3349fc4f9d659ee362b12d7d8c639b6
 
 ## Code
-Thêm hàm __padding() như sha1 đã implement ở challenge29:
+Do implementation MD4 này không có hàm __padding() như sha1 trong challenge trước, ta viết lại hàm __padding() cho tiện sử dụng:
 ```
 @staticmethod
 def __padding(stream):
@@ -20,7 +20,7 @@ def __padding(stream):
     return stream
 ```
 
-Tương tự như challenge 28, thay đổi thành little endian:
+Tương tự như challenge 28, chỉ cần thay đổi thành little endian:
 ```
 def length_extension_attack(self, hash_value: bytes, message_length: int, new_text: bytes):
     # break hash_value into A, B, C, D
