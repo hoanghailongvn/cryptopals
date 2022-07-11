@@ -21,12 +21,12 @@ expected hash: 80a43dcaa022c40978f0ec3314136d87cee30c04
 Do thời gian thực thi mỗi lần so sánh không chính xác là 5ms, do một số yếu tố khác nên thời gian thực thi, phản hồi, sẽ xấp xỉ 5ms. Khi càng về các bytes cuối, sự xấp xỉ này sẽ cộng dồn lại với nhau khá đáng kể nên dễ bị sai.
 
 Ta có thể bruteforce nhiều byte một lần, nhưng làm cách này sẽ tăng thời gian lên rất nhiều, ví dụ chỉ với 2 bytes một lần, thời gian sẽ là: 20 * 256 * 256 * 20 * 5 (ms) = 1.51703704 days:
-- 20: độ dài của signature
+- 20: tổng số vị trí cần bruteforce
 - 256 * 256: 2 bytes một lần
-- 20: Tối đa mỗi lần so sánh sẽ so sánh 20 ký tự
-- 5 ms: thời gian 1 lần so sánh
+- 20: mỗi lần bruteforce, so sánh nhiều nhất cả 20 bytes
+- 5: thời gian mỗi lần so sánh
 
-Hoặc ta làm nổi bật 5ms lên, bằng cách không chỉ dựa vào kết quả một lần chạy, mà tổng của nhiều lần chạy với nhau, như thế độ chính xác sẽ cao hơn:
+Cách hai: ta làm nổi bật 5ms lên, bằng cách không chỉ dựa vào kết quả một lần chạy, mà tổng của nhiều lần chạy với nhau, như thế độ chính xác sẽ cao hơn:
 ```
 def attack():
     found = b""
