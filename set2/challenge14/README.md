@@ -1,9 +1,7 @@
 # **[set 2 - challenge 14](https://cryptopals.com/sets/2/challenges/14): Byte-at-a-time ECB decryption (Harder)**
 
 ## Đề bài
-`Now generate a random count of random bytes and prepend this string to every plaintext.`: đọc không kĩ, nên dịch nhầm thành mỗi lần encrypt sẽ có một string độ dài ngẫu nhiên được thêm vào trước :(. Nhưng thực ra nó là string cố định.
-
-Tương tự như bài challenge12, ta viết hàm:
+Tương tự như bài challenge12, ta viết hàm AES-128-ECB():
 
 AES-128-ECB(random-prefix || attacker-controlled || target-bytes, random-key)
 
@@ -13,41 +11,6 @@ Trong đó:
 - target-bytes: mục tiêu
 - random-key: consistent_but_unknown_key
 
-## oracle AES
-python code:
-```
-import base64
-from random import randint
-from Crypto.Cipher import AES
-import string
-
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
-
-consistent_but_unknown_key = random_bytes(16)
-consistent_but_unknown_prefix = random_bytes(randint(0, 100))
-unknown_target_bytes = base64.b64decode(b"""
-Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkg
-aGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBq
-dXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUg
-YnkK
-""")
-
-def AES_encrypt_ECB_mode(attacker_controlled: bytes):
-    blocksize = 16
-
-    plaintext = consistent_but_unknown_prefix + attacker_controlled + unknown_target_bytes
-    plaintext = pkcs7(plaintext, blocksize)
-
-    cryptor = AES.new(consistent_but_unknown_key, AES.MODE_ECB)
-    ciphertext = cryptor.encrypt(plaintext)
-
-    return ciphertext
-```
 ## Solution
 Do random-prefix cố định nên ta có hướng giải quyết như sau:
 - tìm độ dài prefix
@@ -57,8 +20,8 @@ Do random-prefix cố định nên ta có hướng giải quyết như sau:
 Tìm độ dài prefix:
 - ta đã biết blocksize = 16, ecb mode
 - với prefix cố định ở đầu, sẽ có >= 0 ciphertext block đã được cố định
-- tạo attacker_controlled với độ dài 0 và 1, cho vào hàm AES, tìm số block đã được cố định
-- tăng dần độ dài attacker_controlled (gọi là i) từ 2 trở đi, so sánh ciphertext mới (len = i) và ciphertext cũ (len = i-1), nếu xuất hiện thêm fixed block
+- tạo attacker_controlled với độ dài 0 và 1, cho vào hàm AES, so sánh 2 ciphertext để tìm số block đã được cố định
+- tăng dần độ dài attacker_controlled (gọi là i) từ 2 trở đi, so sánh ciphertext mới (len attacker_controlled = i) và ciphertext ngay trước nó (len attacker_controlled = i - 1), nếu xuất hiện thêm fixed block
     - => số lượng ký tự cần thêm vào prefix để block cuối hoàn chỉnh: i - 1
     - => độ dài prefix: số fixed block * blocksize - (i - 1)
     ```
@@ -134,4 +97,6 @@ With my rag-top down so my hair can blow
 The girlies on standby waving just to say hi
 Did you stop? No, I just drove by
 ```
+
+Source code: [here](./challenge14.py)
 ## References
