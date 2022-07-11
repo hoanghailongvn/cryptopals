@@ -1,17 +1,10 @@
 import base64
 from cmath import inf
-from random import randint
+from os import urandom
 import string
 from Crypto.Cipher import AES
 import struct
 import freqAnalysis
-
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
 
 # xor 2 bytes object theo cái ngắn hơn
 def stream_xor(input1: bytes, input2: bytes) -> bytes:
@@ -21,7 +14,7 @@ def stream_xor(input1: bytes, input2: bytes) -> bytes:
     return ret
 
 blocksize = 16
-consistent_but_unknown_key = random_bytes(16)
+consistent_but_unknown_key = urandom(16)
 nonce = struct.pack("Q", 0)
 
 def generate_keystream(nonce: bytes, counter: int, key: bytes):
