@@ -3,6 +3,8 @@
 ## Secure Remote Password
 [SRP (Secure Remote Password protocol)](https://en.wikipedia.org/wiki/Secure_Remote_Password_protocol): là giao thức giúp server xác thực người dùng thông qua mật khẩu.
 
+Trong giao thức này, MITM không có đủ thông tin để có thể bruteforce password hoặc là dictionary attack. Và phía server cũng không lưu trữ dữ liệu tương đương với password (ví dụ như hash value).
+
 ## Math
 Một số công thức toán có trong giao thức.
 - $`x = hash(salt|P)`$
@@ -12,12 +14,12 @@ Một số công thức toán có trong giao thức.
 - $`B = kv + g^{b} \mod N`$
 - $`S = g^{ab} \times g^{xub} \mod N`$
 
-Trong đó, những nội dung public là: salt, A, B.
+Trong đó, những nội dung gửi qua môi trường public là: salt, A, B.
 
 public key B có phụ thuộc vào password
 
 ## Simulation
-[python code](./challenge36.py)
+Dựa vào kịch bản như trong đề bài, viết simulation: [python code](./challenge36.py)
 # References
 - SRP:
     - https://www.youtube.com/watch?v=RWksEY-Bf9I
