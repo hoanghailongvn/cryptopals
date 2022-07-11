@@ -1,14 +1,5 @@
-from random import randint
 from Crypto.Cipher import AES
 import struct
-
-# tạo ra bytes object ngẫu nhiên có độ dài length
-def urandom(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
 
 # xor 2 bytes object theo cái ngắn hơn
 def stream_xor(input1: bytes, input2: bytes) -> bytes:
