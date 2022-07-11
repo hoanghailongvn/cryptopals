@@ -9,13 +9,6 @@ def stream_xor(input1: bytes, input2: bytes) -> bytes:
     ret = bytes([a ^ b for a, b in zip(input1, input2)])
     return ret
 
-def urandom(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
-
 def pkcs7(message: bytes, blocksize: int) -> bytes:
     diff = blocksize - len(message) % blocksize
     padding = bytes([diff]*diff)
