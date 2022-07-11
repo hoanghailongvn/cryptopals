@@ -122,6 +122,6 @@ print(all([rng.extract_number() == clone_rng.extract_number() for _ in range(624
 ```
 True
 ```
-=> Clone thành công. Source code [here](./script.py)
+=> Clone thành công. Source code [here](./challenge23.py)
 ## References
 
