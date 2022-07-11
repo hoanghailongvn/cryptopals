@@ -1,37 +1,28 @@
 # **[set 5 - challenge 35](https://cryptopals.com/sets/5/challenges/35): Implement DH with negotiated groups, and break with malicious "g" parameters**
 
-```
-1: A->B
-Send "p", "g"
-2: B->A
-Send ACK
-3: A->B
-Send "A"
-4: B->A
-Send "B"
-5: A->B
-Send AES-CBC(SHA1(s)[0:16], iv=random(16), msg) + iv
-6: B->A
-Send AES-CBC(SHA1(s)[0:16], iv=random(16), A's msg) + iv
-```
+TH1: Thay g = 1:
+- [A] ----(p, g)----> [Eve] ----(p, 1)----> [B]:
+    - [B]: $`B = g^b \mod p = 1^b \mod p = 1`$
+- [B] ----(B)----> [Eve] ----(B)----> [A]: Lúc này, B đã là 1:
+    - [A]: $`s = B^a \mod p = 1^a \mod p = 1`$
 
-Tại bước 1, mitm attacker thay "g" = 1:
-- [B]: $`B = g^b \mod p = 1`$
-- => [A]: $`s = B^a \mod p = 1`$ 
+- => MITM attacker biết được bên [A] có s = 1.
 
-=> attacker biết `s` phía A là 1
+TH2: Thay g = p:
+- [A] ----(p, g)----> [Eve] ----(p, p)----> [B]:
+    - [B]: $`B = g^b \mod p = p^b \mod p = 0`$
+- [B] ----(B)----> [Eve] ----(B)----> [A]: Lúc này, B đã là 0:
+    - [A]: $`s = B^a \mod p = 0^a \mod p = 0`$
 
-Nếu g = p
-- [B]: $`B = g^b \mod p = 0`$
-- => [A]: $`s = B^a \mod p = 0`$
+- => MITM attacker biết được bên [A] có s = 0.
 
-=> attacker biết `s` phía A là 0
-
-Nếu g = p - 1:
-
-có công thức: $`((p - 1)^a) \mod p =`$
-- a chẵn: 1
-- a lẻ: p - 1
+TH3: Thay g = p - 1:
+- [A] ----(p, g)----> [Eve] ----(p, p - 1)----> [B]:
+    - [B]: $`B = g^b \mod p = (p - 1)^b \mod p`$
+- [B] ----(B)----> [Eve] ----(B)----> [A]: Lúc này, B đã là $`(p - 1)^b \mod p`$:
+    - [A]: $`s = B^a \mod p = (p - 1)^{ab} \mod p`$
+    - ab chẵn: s = 1
+    - ab lẻ: s = p - 1
 
 => attacker cũng xác định được `s` ở phía A
 
@@ -51,5 +42,6 @@ A key: b'\xb0\xdf`k\x85\xdfG}\x99\x05\xd3\xd5\xeaU\x85\xfa'
 A send: b'private message'
 b'private message'
 ```
+
 Chú ý rằng, key, g, s hai bên A và B giờ đã khác nhau.
 # References
