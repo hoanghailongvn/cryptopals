@@ -7,7 +7,7 @@ AES-128-ECB(attacker-controlled || target-bytes, random-key)
 
 Trong đó:
 - attacker-controlled: phần plaintext mình thích làm gì thì làm
-- target-bytes: mục tiêu
+- target-bytes: mục tiêu cần tìm
 - random-key: consistent_but_unknown_key
 
 ## Hàm oracle AES
@@ -45,7 +45,7 @@ def AES_encrypt_ECB_mode(attacker_controlled: bytes):
 ```
 
 ## Mục tiêu
-Tìm được nội dung `target-bytes` thông qua phần plaintext được đưa vào hàm AES mà chúng ta có thể tùy ý điều chỉnh.
+Tìm được nội dung `target-bytes`.
 
 ## Solution
 Làm theo từng bước được hướng dẫn là ra:
@@ -69,7 +69,7 @@ Làm theo từng bước được hướng dẫn là ra:
     ```
     16
     ```
-- B2: Kiểm tra xem có trong ECB mode hay không
+- B2: Kiểm tra xem có đang dùng ECB mode hay không
     - với blocksize = 16, thử nhập bytes có 32 items giống nhau. So sánh block đầu và block 2.
     - python code:
     ```
@@ -90,7 +90,7 @@ Làm theo từng bước được hướng dẫn là ra:
     - Mà ngay sau attacker_controlled thì chính là `target-bytes` => block cuối sẽ thành 'a'*15 + `ký tự đầu tiên của target-bytes`
 - B4 + B5:
     - Do chỉ có một ký tự nên ta có thể dùng brute-force, thử thay tất cả các ký tự vào bytes cuối.
-    - Nếu cipher text trùng => tìm được `ký tự đầu tiên của target-bytes`
+    - Nếu block ciphertext trùng => tìm được `ký tự đầu tiên của target-bytes`
     - python code:
     ```
     def crack():
@@ -109,7 +109,7 @@ Làm theo từng bước được hướng dẫn là ra:
         
         print(target_bytes)
     ```
-    - Kết quả: ký tự đầu tien của `target-bytes` là 'R':
+    - Kết quả: ký tự đầu tiên của `target-bytes` là 'R':
     ```
     R
     ```
