@@ -3,6 +3,8 @@
 ## Håstad's broadcast attack
 Trong RSA, khi cùng một plaintext được mã hóa `e` lần trở lên bằng `e` public key khác nhau, plaintext có thể dễ dàng bị tìm ra bởi kẻ tấn công.
 
+
+
 ## Implement
 Python code:
 ```
