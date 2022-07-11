@@ -33,16 +33,16 @@ TH3: Thay g = p - 1:
 
 Kết quả:
 ```
-A send: p g A: (37, 5, 28)
-B received p g a: (37, 1, 28)
-B s: 27
-B key: b'\xf0\xbb`\x8a6\x1a\xfa\xa1SV\xa9P\xd9m\xa5\x9b'
+A send: p g A: (37, 5, 9)
+B received p g a: (37, 1, 9)
+B s: 10
+B key: b'M\x89\x07@R<o*hJC\xc0h\xb5\xa1;'
 B send B: 1
 A recv: B: 1
 A s: 1
 A key: b'\xb0\xdf`k\x85\xdfG}\x99\x05\xd3\xd5\xeaU\x85\xfa'
 A send: b'private message'
-b'private message'
+MITM: b'private message'
 ```
 
 Chú ý rằng, key, g, s hai bên A và B giờ đã khác nhau.
