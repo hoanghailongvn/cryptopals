@@ -136,11 +136,11 @@ def simulate_mitm():
 
     p_g_A = alice.send_p_g_A()
 
-    # p g p
+    # p g=1 A
     fake_p_g_A = (p_g_A[0], ) + (1, ) + (p_g_A[2], )
 
+    # B=1
     B_ = bob.recv_p_g_A(fake_p_g_A)
-    # p
     alice.recv_B(B_)
 
     # => s bên A là 1
