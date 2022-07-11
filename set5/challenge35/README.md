@@ -1,5 +1,7 @@
 # **[set 5 - challenge 35](https://cryptopals.com/sets/5/challenges/35): Implement DH with negotiated groups, and break with malicious "g" parameters**
 
+Điều gì xảy ra nếu MITM attacker thay đổi g, với các giá trị 1, p, p - 1:
+
 TH1: Thay g = 1:
 - [A] ----(p, g)----> [Eve] ----(p, 1)----> [B]:
     - [B]: $`B = g^b \mod p = 1^b \mod p = 1`$
