@@ -4,7 +4,7 @@
 ### Khái niệm
 Base64 is a group of [binary-to-text encoding](https://en.wikipedia.org/wiki/Binary-to-text_encoding) chemes.
 ### Mục đích
-Common to all binảy-to-text encoding schemes, Base64 is designed to carry data stored in binary formats across channels that only reliably support text content.
+Common to all binary-to-text encoding schemes, Base64 is designed to carry data stored in binary formats across channels that only reliably support text content.
 ### Cách thức hoạt động
 Each 24bits can be represented by four 6-bit Base64 digits.
 ### Examples
