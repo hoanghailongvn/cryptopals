@@ -5,12 +5,12 @@
 
 ## Math
 Một số công thức toán có trong giao thức.
-- $x = hash(salt|P)$
-- $u = hash(A|B)$
-- $v = g^{x} \mod N$
-- $A = g^{a} \mod N$
-- $B = kv + g^{b} \mod N$
-- $S = g^{ab} \times g^{xub} \mod N$
+- $`x = hash(salt|P)`$
+- $`u = hash(A|B)`$
+- $`v = g^{x} \mod N`$
+- $`A = g^{a} \mod N`$
+- $`B = kv + g^{b} \mod N`$
+- $`S = g^{ab} \times g^{xub} \mod N`$
 
 Trong đó, những nội dung public là: salt, A, B.
 
