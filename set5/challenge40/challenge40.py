@@ -24,6 +24,6 @@ result = (
     c2 * n0 * n1 * pow(n0 * n1, -1, n2)
 ) % (n0 * n1 * n2)
 
-decrypted = round(pow(result, 1/3))
+decrypted = round(pow(result, 1/e))
 
 print(decrypted)
