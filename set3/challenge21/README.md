@@ -96,5 +96,3 @@ Trong đó, bao gồm 3 hàm chính:
 - Pseudorandom number generators | Computer Science | Khan Academy: https://www.youtube.com/watch?v=GtOt7EBNEwQ
 - Pseudorandom number generators | Coursera: https://www.coursera.org/learn/crypto/lecture/5m8ay/stream-ciphers-and-pseudo-random-generators
 - yield keywork python: https://stackoverflow.com/a/231855
-
-

@@ -39,5 +39,4 @@ found seed: 165673744
 ```
 
 ## References
-- writeup: https://cedricvanrompay.gitlab.io/cryptopals/challenges/22.html
 

@@ -47,8 +47,3 @@ class MT19937_32:
         self.index = self.index + 1
 
         return y & ((1 << self.w) - 1)
-
-if __name__ == "__main__":
-    rng = MT19937_32()
-    for i in range(10):
-        print(rng.extract_number())
