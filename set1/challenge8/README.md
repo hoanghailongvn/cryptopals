@@ -1,10 +1,10 @@
 # **[set 1 - challenge 8](https://cryptopals.com/sets/1/challenges/8): Detect AES in ECB mode**
 
-Như đã nói trong challenge 7 cũng như là đề bài gợi ý, ecb sẽ cho cipher text giống nhau cho các plaintext giống nhau.
+Như đã nói trong challenge 7 cũng như là đề bài gợi ý, ecb sẽ cho ra block ciphertext giống nhau với các block plaintext giống nhau.
 
-ecb chia plaintext ra làm các block 16 bits.
+Mỗi block 16 bits.
 
-=> Kiểm tra từng dòng trong file txt: đếm số block 16 bits xuất hiện nhiều lần:
+=> Kiểm tra từng dòng trong file txt: đếm số lần xuất hiện của từng block:
 ```
 import binascii
 from Crypto.Cipher import AES
@@ -40,6 +40,6 @@ line: 132
 block: b'\x08d\x9a\xf7\r\xc0oO\xd5\xd2\xd6\x9ctL\xd2\x83'
 times: 4
 ```
-Ở dòng 132 + 1, có xuất hiện 4 lần => Khả năng cao dòng này được mã hóa với ECB
+Ở dòng 132, có một block xuất hiện 4 lần => Khả năng cao dòng này được mã hóa với ECB
 
 ## References
