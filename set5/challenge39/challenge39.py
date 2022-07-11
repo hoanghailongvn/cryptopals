@@ -17,7 +17,7 @@ e = 3
 d = pow(e, -1, phi)
 
 # encrypt & decrypt
-s = 42
-encrypted = pow(s, e, n)
+s = b"secret message"
+encrypted = pow(int.from_bytes(s, byteorder='big'), e, n)
 decrypted = pow(encrypted, d, n)
-print(decrypted == s)
+print(decrypted.to_bytes(14, byteorder='big'))
