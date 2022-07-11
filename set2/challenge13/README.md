@@ -144,7 +144,7 @@ Kết quả:
 ```
 {'email': 'aaaaaaaaaauser\x0c\x0c\x0c\x0c\x0c\x0c\x0c\x0c\x0c\x0c\x0c\x0caaa', 'uid': '10', 'role': 'admin'}
 ```
-Source code: [here](./script.py)
+Source code: [here](./challenge13.py)
 
 ## References
 - lambda: https://julien.danjou.info/python-functional-programming-lambda/

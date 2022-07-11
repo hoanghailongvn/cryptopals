@@ -22,7 +22,7 @@ Hàm kiểm tra padding hợp lệ của pkcs7:
 ## CBC padding attack
 Thử thách này, ta sẽ sử dụng một [attack model](https://en.wikipedia.org/wiki/Attack_model) gọi là [Chosen-ciphertext attack](https://en.wikipedia.org/wiki/Chosen-ciphertext_attack). Bằng cách tạo ra các ciphertext tùy ý để cho vô hàm decrypt, dựa vào các thông tin nhận được để đọc được plaintext hoặc lấy được key.
 
-CBC padding attack: lợi dụng hàm kiểm tra xem padding có hợp lệ hay không, kẻ tấn công có thể lấy được ciphertext.
+CBC padding attack: lợi dụng hàm kiểm tra xem padding có hợp lệ hay không, kẻ tấn công có thể lấy được plaintext.
 - trong phép toán: `plaintext block` = `previous ciphertext block` xor `after_decrypt`, ta có thể tùy ý thay đổi `previous ciphertext block`
 - thông qua kết quả trả về của hàm kiểm tra padding hợp lệ, ta có thể biết được giá trị của `plaintext block` được tạo thành với mỗi `previous cipher block`
 
@@ -41,7 +41,7 @@ Giải thích: Xét từng block của ciphertext
         <img src="pictures/modify_previous.png">
     
     - Gửi ciphertext = `fake previous ciphertext block` + `ciphertext block` đang xét vô hàm decrypt
-    - Thay đổi byte cuối của `fake previous ciphertext block`, khi mà pass qua được hàm kiểm tra padding, `plaintext block` có thể có các trường hợp sau:
+    - Bruteforce byte cuối của `fake previous ciphertext block`, khi mà pass qua được hàm kiểm tra padding, `plaintext block` có thể có các trường hợp sau:
 
         <img src="pictures/pass_validate.png">
 
@@ -64,7 +64,7 @@ Giải thích: Xét từng block của ciphertext
 
         <img src="pictures/fake_last_byte_02_done.png">
 
-    - Lại thay đổi `fake previous ciphertext block`[-2] cho đến khi pass padding validate, khi đó `plaintext block`[-2] = 2:
+    - Lại bruteforce `fake previous ciphertext block`[-2] cho đến khi pass padding validate, khi đó `plaintext block`[-2] = 2:
 
         <img src="pictures/fake-2.png">
 
@@ -76,25 +76,11 @@ Khi đã có `after_decrypt`, ta xor nó với **real** `previous_ciphertext_blo
 Lặp lại với tất cả các `ciphertext block`, ta sẽ tìm được hết plaintext
 
 ## Code
-Implement 2 hàm cần thiết của đề bài, các hàm khác trong đó có thể đọc trong [source code](script.py):
+Implement 2 hàm cần thiết của đề bài, các hàm khác trong đó có thể đọc trong [source code](./challenge17.py)):
 ```
-ten_strings = \
-"""
-MDAwMDAwTm93IHRoYXQgdGhlIHBhcnR5IGlzIGp1bXBpbmc=
-MDAwMDAxV2l0aCB0aGUgYmFzcyBraWNrZWQgaW4gYW5kIHRoZSBWZWdhJ3MgYXJlIHB1bXBpbic=
-MDAwMDAyUXVpY2sgdG8gdGhlIHBvaW50LCB0byB0aGUgcG9pbnQsIG5vIGZha2luZw==
-MDAwMDAzQ29va2luZyBNQydzIGxpa2UgYSBwb3VuZCBvZiBiYWNvbg==
-MDAwMDA0QnVybmluZyAnZW0sIGlmIHlvdSBhaW4ndCBxdWljayBhbmQgbmltYmxl
-MDAwMDA1SSBnbyBjcmF6eSB3aGVuIEkgaGVhciBhIGN5bWJhbA==
-MDAwMDA2QW5kIGEgaGlnaCBoYXQgd2l0aCBhIHNvdXBlZCB1cCB0ZW1wbw==
-MDAwMDA3SSdtIG9uIGEgcm9sbCwgaXQncyB0aW1lIHRvIGdvIHNvbG8=
-MDAwMDA4b2xsaW4nIGluIG15IGZpdmUgcG9pbnQgb2g=
-MDAwMDA5aXRoIG15IHJhZy10b3AgZG93biBzbyBteSBoYWlyIGNhbiBibG93
-""".strip().split('\n')
-
 blocksize = 16
-consistent_but_unknown_key = random_bytes(16)
-iv = random_bytes(blocksize)
+consistent_but_unknown_key = urandom(16)
+iv = urandom(blocksize)
 
 def challenge17_encrypt():
     plaintext = ten_strings[randint(0, 9)]

@@ -159,6 +159,6 @@ Làm theo từng bước được hướng dẫn là ra:
     Did you stop? No, I just drove by
 
     ```
-    Source code: [link](./script.py)
+    Source code: [link](./challenge12.py)
 
 ## References
