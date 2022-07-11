@@ -16,20 +16,24 @@ Send AES-CBC(SHA1(s)[0:16], iv=random(16), A's msg) + iv
 ```
 
 Tại bước 1, mitm attacker thay "g" = 1:
-- B: "B" = ("g" ^ "b") % "p" = 1
-- => A: "s" = ("B" ^ "a") % "p" = 1 => attacker biết "s" phía A là 1
+- [B]: $`B = g^b \mod p = 1`$
+- => [A]: $`s = B^a \mod p = 1`$ 
+
+=> attacker biết `s` phía A là 1
 
 Nếu g = p
-- B: "B" = ("g" ^ "b") % "p" = 0
-- A: "s" = ("B" ^ "a") % "p" = 0 => attacker biết "s" phía A là 0
+- [B]: $`B = g^b \mod p = 0`$
+- => [A]: $`s = B^a \mod p = 0`$
+
+=> attacker biết `s` phía A là 0
 
 Nếu g = p - 1:
 
-có công thức: ((p - 1) ^ a) % p =
+có công thức: $`((p - 1)^a) \mod p =`$
 - a chẵn: 1
 - a lẻ: p - 1
 
-=> attacker cũng xác định được "s" ở phía A
+=> attacker cũng xác định được `s` ở phía A
 
 ## Code với g = 1
 [here](./challenge35.py)
