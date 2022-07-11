@@ -13,7 +13,7 @@ ECB:
 - Là viết tắt của Electronic Code Block
 - Là một trong các mode trong block cipher
 - Trong đó:
-    - Plain text được chia làm các blocks bằng nhau
+    - Plaintext được chia làm các blocks bằng nhau
     - Cùng được mã hóa với key k
 
     <img src="pictures/ecb.png">
@@ -22,7 +22,7 @@ ECB:
     - Nhanh
     - Có thể sử dụng kỹ thuật đa luồng để tăng tốc tính toán do các blocks không liên quan đến nhau
 - Disadvantages:
-    - Với 2 plain text giống nhau, sẽ cùng mã hóa ra cipher text, ví dụ nổi tiếng:
+    - Với 2 plaintext giống nhau, sẽ cùng mã hóa ra ciphertext, ví dụ nổi tiếng:
 
     <img src="pictures/penguin.jpg">
 
@@ -133,5 +133,7 @@ Play that funky music
 ```
 
 ## References
-- Block cipher modes: https://www.educba.com/block-cipher-modes-of-operation/
-- AES: https://www.geeksforgeeks.org/advanced-encryption-standard-aes/
+- Block cipher modes: 
+    - https://www.educba.com/block-cipher-modes-of-operation/
+- AES: 
+    - https://www.geeksforgeeks.org/advanced-encryption-standard-aes/
