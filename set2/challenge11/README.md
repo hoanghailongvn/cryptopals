@@ -14,9 +14,9 @@ Theo như đọc ở một số bài thì oracle là mình có thể chọn inpu
 Mà để detect được ECB như challenge8 thì ở ciphertext phải có block trùng lặp.\
 => Ta cần chọn plaintext sao cho chắc chắn ở ciphertext có block trùng. Tính toán:
 - 2 block (mỗi block 16 bytes) có độ dài 32 bytes
-    - => plaintext có 32 ký tự giống nhau liền nhau thì cipher text có block trùng
-- Do bước thêm 5 đến 10 ký tự vào đầu plaintext dẫn đến plaintext bị xê dịch
-    - => Cộng thêm 10, cần tổng cộng 42 ký tự.
+    - => plaintext có 32 ký tự giống nhau liền nhau thì ciphertext có block trùng
+- Do ở bước thêm 5 đến 10 ký tự vào đầu và cuối plaintext dẫn đến plaintext bị xê dịch
+    - => Cộng thêm 10, cần tổng cộng 42 ký tự để chắc chắn có 2 block ciphertext giống nhau
 
 => Chọn plaintext là: "a"*42
 
@@ -35,30 +35,20 @@ python code:
 
         return ret
     ```
-- random_bytes:
-    - tạo ra bytes object ngẫu nhiên có độ dài xác định
-    - dùng để tạo ngẫu nhiên key và vi
-    ```
-    def random_bytes(length: int) -> bytes:
-        ret = []
-        for _ in range(length):
-            ret.append(randint(0, 255))
-        
-        return bytes(ret)
-    ```
+
 - append_5_10:
-    - làm như đề bài:
     ```
     def append_5_10(plaintext: bytes):
         first = randint(5, 10)
         last = randint(5, 10)
-        ret = random_bytes(first) + plaintext + random_bytes(last)
+        ret = urandom(first) + plaintext + urandom(last)
 
         return ret
     ```
 - AES_encrypt:
     - ghép từng bước lại với nhau, trong đó mode ecb/cbc được chọn ngẫu nhiên và in ra màn hình
     ```
+    # AES_encrypt with 50% ecb mode and 50% cbc mode
     def AES_encrypt(plaintext: bytes):
         keysize = 16
         blocksize = 16
@@ -67,8 +57,8 @@ python code:
         plaintext = pkcs7(plaintext, blocksize)
 
         r = randint(0, 1)
-        key = random_bytes(keysize)
-        iv = random_bytes(blocksize)
+        key = urandom(keysize)
+        iv = urandom(blocksize)
 
         if r == 0: #ECB
             print("used mode: ecb")
@@ -82,7 +72,7 @@ python code:
         return ciphertext
     ```
 - detect_ECB:
-    - như challenge8, sửa lại là nếu có block trùng thì return True
+    - sử dụng hàm đã viết trong challenge8, sửa lại là nếu có block trùng thì return True
     ```
     def detect_ECB(ciphertext: bytes, blocksize: int = 16):
         dict_cipher = {}
@@ -100,80 +90,8 @@ python code:
                 return True
         return False
     ```
-Full code:
-```
-from random import randint
-from Crypto.Cipher import AES
+Full code: [here](./challenge11.py)
 
-def pkcs7(message: bytes, blocksize: int) -> bytes:
-    diff = blocksize - len(message) % blocksize
-    padding = bytes([diff]*diff)
-
-    ret = message + padding
-
-    return ret
-
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
-
-def append_5_10(plaintext: bytes):
-    first = randint(5, 10)
-    last = randint(5, 10)
-    ret = random_bytes(first) + plaintext + random_bytes(last)
-
-    return ret
-
-# AES_encrypt with 50% ecb mode and 50% cbc mode
-def AES_encrypt(plaintext: bytes):
-    keysize = 16
-    blocksize = 16
-
-    plaintext = append_5_10(plaintext)
-    plaintext = pkcs7(plaintext, blocksize)
-
-    r = randint(0, 1)
-    key = random_bytes(keysize)
-    iv = random_bytes(blocksize)
-
-    if r == 0: #ECB
-        print("used mode: ecb")
-        cryptor = AES.new(key, AES.MODE_ECB)
-        ciphertext = cryptor.encrypt(plaintext)
-    elif r == 1: #CBC
-        print("used mode: cbc")
-        cryptor = AES.new(key, AES.MODE_CBC, iv)
-        ciphertext = cryptor.encrypt(plaintext)
-
-    return ciphertext
-
-def detect_ECB(ciphertext: bytes, blocksize: int = 16):
-    dict_cipher = {}
-    for i in range(0, len(ciphertext), blocksize):
-        blockk = ciphertext[i:i+blocksize]
-        if blockk in dict_cipher:
-            dict_cipher[blockk] += 1
-        else:
-            dict_cipher[blockk] = 1
-
-    # In ra block nào xuất hiện nhiều hơn 1 lần
-    for blockk in dict_cipher:
-        if dict_cipher[blockk] > 1:
-            print(f"block: {blockk}\ntimes: {dict_cipher[blockk]}")
-            return True
-    return False
-
-if __name__ == "__main__":
-    ciphertext = AES_encrypt(bytes("a"*42, 'ascii'))
-    print(f"ciphertext: {ciphertext}")
-    if detect_ECB(ciphertext):
-        print("detected mode: ecb")
-    else:
-        print("detected mode: cbc")
-```
 Kết quả:
 ```
 used mode: ecb
