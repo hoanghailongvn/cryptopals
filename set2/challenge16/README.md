@@ -2,7 +2,7 @@
 
 
 ## Đề bài
-Như challenge13, ta cũng thay đổi ciphertext để khi decrypt sẽ được plaintext như mong muốn mà nếu nhập trực tiếp sẽ không được: ";admin=true"
+Như challenge13, ta cũng thay đổi ciphertext để khi decrypt sẽ được plaintext như mong muốn.
 
 ## Code
 Implement một số hàm cần thiết cho challenge16:
@@ -11,14 +11,15 @@ Implement một số hàm cần thiết cho challenge16:
 - check is_admin
 ```
 from Crypto.Cipher import AES
-from random import randint
+from os import urandom
 
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
+# xor 2 bytes object có độ dài bằng nhau
+def stream_xor(input1: bytes, input2: bytes) -> bytes:
+    if len(input1) != len(input2):
+        assert("stream_xor: length not equal!")
     
-    return bytes(ret)
+    ret = bytes([a ^ b for a, b in zip(input1, input2)])
+    return ret
 
 def pkcs7(message: bytes, blocksize: int) -> bytes:
     diff = blocksize - len(message) % blocksize
@@ -33,8 +34,8 @@ def pkcs7_unpadding(message:bytes) -> bytes:
     return message[: -pad]
 
 blocksize = 16
-consistent_but_unknown_key = random_bytes(16)
-consistent_but_unknown_iv = random_bytes(blocksize)
+consistent_but_unknown_key = urandom(16)
+consistent_but_unknown_iv = urandom(blocksize)
 
 def challenge16_encrypt(attacker_controlled: bytes):
     plaintext = b"comment1=cooking%20MCs;userdata=" + attacker_controlled.replace(b'=', b'').replace(b';', b'') + b";comment2=%20like%20a%20pound%20of%20bacon"
@@ -53,7 +54,7 @@ def challenge16_decrypt(ciphertext: bytes):
     return plaintext
 
 def is_admin(plaintext: bytes):
-    return b'admin=true' in plaintext
+    return b';admin=true' in plaintext
 ```
 
 ## Ý tưởng
@@ -70,14 +71,16 @@ Với prepend text và append text có sẵn, plaintext chia thành các block s
 4: ;comment2=%20lik
 5: e%20a%20pound%20
 ```
-Quan sát block ciphertext thứ 2 đến khi được decrypt thành block plaintext thứ 2:
+Quan sát block ciphertext đến khi được decrypt thành block plaintext:
 - đầu tiên sẽ đi qua decryption
-- sau đó xor với block ciphertext thứ 1
+- sau đó xor với block ciphertext trước nó
 
-Ta không biết key nên không động được vô bước decryption, nhưng ta có thể thay đổi block ciphertext thứ 1 => có thể thay đổi plaintext sau khi decryption tùy ý.
+Ta không biết key nên không động được vô bước decryption, nhưng nếu ta có thể thay đổi block ciphertext trước đó => có thể thay đổi plaintext sau khi decrypt.
 
-Để không làm thay đổi prepend text ở block ciphertext thứ 1. ta thay đổi mục tiêu như sau:
-- đặt ";admin=true" ở block4
+Chọn:
+- attacker-controlled có độ dài 32 bytes
+- đặt ";admin=true" ở block3
+- thay đổi block2
 ```
 0: comment1=cooking
 1: %20MCs;userdata=
@@ -86,7 +89,6 @@ Ta không biết key nên không động được vô bước decryption, nhưng
 4: ;comment2=%20lik
 5: e%20a%20pound%20
 ```
-Như thế này thì khi thay đổi block ciphertext thứ 2, sẽ không ảnh hưởng đến prepend text.
 
 ## Solution
 Tạo `attacker_controlled` = 32 ký tự 'a', các block plaintext sẽ trông như sau:
@@ -112,12 +114,15 @@ ciphertext5: b'2y\x1b\x8d`\x14\xb7C*\xb2$e\x16\xd0\x1c['
 ciphertext6: b'\xe1\xf3\xfeb\xc5>\xe4\xd3\x85`\xb9v\xda\x82-\xaf'
 ```
 ciphertext3 -> plaintext3 gồm 2 bước:
-- decrypt ciphertext3 bằng aes: gọi kết quả là `temp`
-- xor `temp` với ciphertext2 ra plaintext3
+- decrypt ciphertext3 bằng aes: gọi kết quả là `after_decrypt`
+- plaintext3 = `after_decrypt` xor ciphertext2
 
-=>:
-- `temp` = plaintext3 xor ciphertext2
-- xor `temp` với string ".....;admin=true", kết quả thay vào ciphertext2
+Tính nội dung cần thay vào ciphertext2:
+- `after_decrypt` = plaintext3 xor ciphertext2
+- thay ciphertext2 = `after_decrypt` xor ".....;admin=true"
+
+Khi đó:
+- plaintext3 = `after_decrypt` xor ciphertext2 = `after_decrypt` xor (`after_decrypt` xor ".....;admin=true") = ".....;admin=true"
 => Khi decrypt sẽ ra ";admin=true"
 
 Python code:
