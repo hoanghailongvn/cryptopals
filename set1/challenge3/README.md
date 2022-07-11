@@ -102,13 +102,13 @@ def englishFreqMatchScore(message):
 ```
 Trong hàm đánh giá đơn giản này, ta sẽ:
 - Thống kê số lượng từng chữ cái trong câu, sắp xếp giảm dần
-- Trong 6 chữ cái xuất hiện nhiều nhất (6 chữ cái ở đầu), +1 điểm với mỗi chữ cái có trong 'ETAOIN' (6 chữ cái có tỉ lệ được dùng nhiều nhất trong tiếng anh)
-- Trong 6 chữ cái xuất hiện ít nhất (6 chữ cái ở cuối), +1 điểm với mỗi chữ cái có trong 'VKJXQZ' (6 chữ cái có tỉ lệ được dùng ít nhất trong tiếng anh)
+- Trong 6 chữ cái xuất hiện nhiều nhất, +1 điểm với mỗi chữ cái có trong 'ETAOIN' (6 chữ cái có tỉ lệ được dùng nhiều nhất trong tiếng anh)
+- Trong 6 chữ cái xuất hiện ít nhất, +1 điểm với mỗi chữ cái có trong 'VKJXQZ' (6 chữ cái có tỉ lệ được dùng ít nhất trong tiếng anh)
 
 ## Final
 Viết script python:
 - xor ciphertext với từng key từ 0 - 255
-- loại các xor-ed text mà có ký tự không in được (non printable)
+- loại các xor-ed text mà có non printable character
 - sử dụng hàm python ở trên để lấy điểm
 
 ```
