@@ -9,11 +9,11 @@ CTR:
 - Counter mode 
 - Là một trong các mode của block cipher như ECB, CBC
 - CTR làm cho block cipher hoạt động như stream cipher: với mỗi block sẽ tạo ra keystream khác nhau:
-    - xor keystream với plaintext => ciphertext (encrypt)
-    - xor keystream với ciphertext => plaintext (decrypt)
+    - ciphertext = keystream xor plaintext (encrypt)
+    - plaintext = keystream xor ciphertext (decrypt)
 - không cần padding
 - Advantages:
-    - Mỗi block plaintext sẽ có key khác nhau, do đó 2 plaintext block giống nhau được encrypt thành 2 ciphertext block khác nhau.
+    - Mỗi block plaintext sẽ có keystream khác nhau, do đó 2 plaintext block giống nhau được encrypt thành 2 ciphertext block khác nhau.
     - Do encrypt và decrypt hoạt động ở mỗi block độc lập như ECB, có thể sử dụng đa luồng để tăng tốc độ tính toán.
 
 ## Challenge 18
@@ -76,4 +76,3 @@ b"Yo, VIP Let's kick it Ice, Ice, baby Ice, Ice, baby "
 ```
 
 ## References
-- writeup: https://cedricvanrompay.gitlab.io/cryptopals/challenges/18.html
