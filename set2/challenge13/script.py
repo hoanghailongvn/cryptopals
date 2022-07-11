@@ -1,12 +1,5 @@
-from random import randint
 from Crypto.Cipher import AES
-
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
+from os import urandom
 
 def pkcs7(message: bytes, blocksize: int) -> bytes:
     diff = blocksize - len(message) % blocksize
@@ -21,7 +14,7 @@ def pkcs7_unpadding(message:bytes) -> bytes:
     return message[: -pad]
 
 blocksize = 16
-consistent_but_unknown_key = random_bytes(16)
+consistent_but_unknown_key = urandom(16)
 
 def cookie2dict(s: str) -> dict:
     return dict(map(lambda x: x.split('='), s.strip('&').split('&')))

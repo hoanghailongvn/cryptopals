@@ -1,6 +1,5 @@
-from pydoc import plain
 from Crypto.Cipher import AES
-from random import randint
+from os import urandom
 
 # xor 2 bytes object có độ dài bằng nhau
 def stream_xor(input1: bytes, input2: bytes) -> bytes:
@@ -9,13 +8,6 @@ def stream_xor(input1: bytes, input2: bytes) -> bytes:
     
     ret = bytes([a ^ b for a, b in zip(input1, input2)])
     return ret
-
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
 
 def pkcs7(message: bytes, blocksize: int) -> bytes:
     diff = blocksize - len(message) % blocksize
@@ -30,8 +22,8 @@ def pkcs7_unpadding(message:bytes) -> bytes:
     return message[: -pad]
 
 blocksize = 16
-consistent_but_unknown_key = random_bytes(16)
-consistent_but_unknown_iv = random_bytes(blocksize)
+consistent_but_unknown_key = urandom(16)
+consistent_but_unknown_iv = urandom(blocksize)
 
 def challenge16_encrypt(attacker_controlled: bytes):
     plaintext = b"comment1=cooking%20MCs;userdata=" + attacker_controlled.replace(b'=', b'').replace(b';', b'') + b";comment2=%20like%20a%20pound%20of%20bacon"

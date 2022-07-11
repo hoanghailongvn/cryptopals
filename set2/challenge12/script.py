@@ -1,14 +1,7 @@
 import base64
-from random import randint
 from Crypto.Cipher import AES
 import string
-
-def random_bytes(length: int) -> bytes:
-    ret = []
-    for _ in range(length):
-        ret.append(randint(0, 255))
-    
-    return bytes(ret)
+from os import urandom
 
 def pkcs7(message: bytes, blocksize: int) -> bytes:
     diff = blocksize - len(message) % blocksize
@@ -18,7 +11,7 @@ def pkcs7(message: bytes, blocksize: int) -> bytes:
     ret = message + padding
     return ret
 
-consistent_but_unknown_key = random_bytes(16)
+consistent_but_unknown_key = urandom(16)
 unknown_target_bytes = base64.b64decode(b"""
 Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkg
 aGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBq
