@@ -4,26 +4,26 @@
 
 Để giải quyết được challenge 29 thì ta cần tìm hiểu xem sha1 hoạt động như thế nào.
 ## SHA1: 
-- Đầu tiên SHA1 sẽ padding input sao cho độ dài của input chia hết cho 512(bit)|64(byte):
+- Đầu tiên SHA1 sẽ padding input sao cho độ dài của input chia hết cho 512(bit):
     - Thêm bit 1 vào cuối
-    - Thêm một số lượng bit 0 vào cuối sao cho độ dài block cuối là 448(bit)|56(byte)
-    - Độ dài ban đầu của input sẽ được đưa vào cuối block với dạng 64 bit
+    - Thêm một số lượng bit 0 vào cuối sao cho độ dài block cuối là 448(bit)
+    - Giá trị độ dài ban đầu của input sẽ được đưa vào cuối block với dạng 64 bit
 - Input sẽ được chia làm n block, mỗi block 512 bit
 - Từng block sẽ được đưa vào một hàm xử lý, trong đó:
     - sha1 khởi động với 5 hằng số, mỗi hằng số là 4 byte, gọi là h0, h1, ..., h4
     - Khi xử lý một block, các h0, h1, ..., h4 sẽ được cập nhật giá trị mới thông qua các phép toán liên quan đến block và các giá trị h0, h1, ..., h4 hiện tại
-    - Khi xử lý block tiếp theo, tiếp tục sử dụng các `h` mới của block trước
+    - Khi xử lý block tiếp theo, tiếp tục sử dụng các `h` của block trước
     - Khi xử lý xong block cuối cùng, ghép tất cả các h0, h1, ..., h4 lại với nhau ta được hash value (5 * 4 = 20 byte = 160 bit)
     - hình minh họa: [source](https://www.youtube.com/watch?v=QLSlKxAQD8I)
 
     <img src="pictures/sha1.png">
 
-    - Trong đó:
-        - m0, m1, m2, ... là các được chia ra từ input
+    - Trong hình:
+        - m0, m1, m2, ... là các block được chia ra từ input
         - y0, chính là h0, h1, ..., h4
 
 ## Break
-Ta nhận thấy Hash value chính là các h0, h1, ..., h4 ghép lại. Ta có thể tiếp tục quá trình hash bằng cách lấy Hash value tách ra thành các ho, h1, ..., h4, và thêm một phần input mới vô:
+Ta nhận thấy Hash value chính là các h0, h1, ..., h4 ghép lại. Ta có thể tiếp tục quá trình hash bằng cách lấy Hash value tách ra thành các h0, h1, ..., h4, lấy các giá trị này để tiếp tục quá trình băm:
 
 <img src="pictures/sha1_challenge29.png">
 
