@@ -80,14 +80,14 @@ Trong đó, bao gồm 3 hàm chính:
 - extract_number():
     - Hàm này trả về một số ngẫu nhiên
     - Bằng cách lần lượt lấy phần tử tiếp theo trong mảng states, sau đó áp dụng một số phép toán vào để tạo ra kết quả
-    - Các phép toán có thể tham khảo trong [source code](./script.py) và hình vẽ dưới đây:
+    - Các phép toán có thể tham khảo trong [source code](./challenge21.py) và hình vẽ dưới đây:
 
     <img src="pictures/extract_number.png">
 
 - twist():
     - Mỗi lần gọi hàm extract_number() sẽ sử dụng một phần tử trong mảng states. Do đó khi dùng hết, hàm twist() sẽ được gọi,với 624 phần tử trong mảng states cũ tạo ra mảng states mới
     - Hàm này cũng được gọi ngay sau khi hàm seed_mt() tạo ra mảng states, chứ không dùng mảng states của seed_mt() để dùng cho extract_number() luôn
-    - Các phép toán có thể tham khảo trong [source code](./script.py) và hình vẽ dưới đây:
+    - Các phép toán có thể tham khảo trong [source code](./challenge21.py) và hình vẽ dưới đây:
 
     <img src="pictures/twist.png">
 
@@ -96,6 +96,5 @@ Trong đó, bao gồm 3 hàm chính:
 - Pseudorandom number generators | Computer Science | Khan Academy: https://www.youtube.com/watch?v=GtOt7EBNEwQ
 - Pseudorandom number generators | Coursera: https://www.coursera.org/learn/crypto/lecture/5m8ay/stream-ciphers-and-pseudo-random-generators
 - yield keywork python: https://stackoverflow.com/a/231855
-- Writeup: https://github.com/anneouyang/MT19937
 
 
