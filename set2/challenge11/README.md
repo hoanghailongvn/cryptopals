@@ -33,7 +33,7 @@ But in order to detect ECB mode like challenge 8, there must be duplicate blocks
 Under the hood, have the function append 5-10 bytes (count chosen randomly) before the plaintext and 5-10 bytes after the plaintext.
 ```
 
-- => Plaintext must have at least (32 + 10) = 42 consecutive identical characters to output 2 identical blocks after encrypt.
+- => Plaintext must have at least (32 + (16-5)) = 43 consecutive identical characters to output 2 identical blocks after encrypt.
 
 => So the plaintext is: "a"*42
 
