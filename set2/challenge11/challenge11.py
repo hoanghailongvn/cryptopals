@@ -58,7 +58,7 @@ def detect_ECB(ciphertext: bytes, blocksize: int = 16):
     return False
 
 if __name__ == "__main__":
-    ciphertext = AES_encrypt(bytes("a"*42, 'ascii'))
+    ciphertext = AES_encrypt(bytes("a"*43, 'ascii'))
     print(f"ciphertext: {ciphertext}")
     if detect_ECB(ciphertext):
         print("detected mode: ecb")
