@@ -35,7 +35,7 @@ Under the hood, have the function append 5-10 bytes (count chosen randomly) befo
 
 - => Plaintext must have at least (32 + (16-5)) = 43 consecutive identical characters to output 2 identical blocks after encrypt.
 
-=> So the plaintext is: "a"*42
+=> So the plaintext is: "a"*43
 
 ## Python code
 
